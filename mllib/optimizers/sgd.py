@@ -1,4 +1,4 @@
-from mllib.base.base import BaseOptimizer
+from base import BaseOptimizer
 import numpy as np
 from collections import defaultdict
 
