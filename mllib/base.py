@@ -44,19 +44,18 @@ class Estimator:
     
 
 class BaseOptimizer:
-    def __init__(self, gradient_fn, learning_rate, tolerance=1e-5, max_iter=1000):
+    def __init__(self, gradient_fn, parameters, learning_rate, tolerance=1e-8, max_iter=1000):
         self.learning_rate = learning_rate
         self.gradient_fn = gradient_fn
+        self.parameters = parameters
         self.tol = tolerance
         self.max_iter = max_iter
         self.history = defaultdict(list)
     
-    def update_parameters(self, parameters, gradient_fn):
+    def update_parameters(self, parameters, gradient):
         raise NotImplementedError("Subclasses must implement update_parameters method.")
     
     def optimize(self):
         raise NotImplementedError("Subclasses must implement optimize method.")
-
-
 
     
