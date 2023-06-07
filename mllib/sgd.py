@@ -1,6 +1,5 @@
 from base import BaseOptimizer
 import numpy as np
-from collections import defaultdict
 
 "https://github.com/timvvvht/Neural-Networks-and-Optimizers-from-scratch/blob/main/optimizers.py"
 "https://towardsdatascience.com/linear-regression-and-gradient-descent-using-only-numpy-53104a834f75"
