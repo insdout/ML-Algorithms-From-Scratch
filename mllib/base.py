@@ -1,16 +1,16 @@
 import numpy as np
 from collections import defaultdict
 
-class Estimator:
+class BaseEstimator:
     y_required = True
     fit_required = True
 
     def fit(self, X, y=None):
-        self._check_input(X, y)
+        X, y = self._check_input(X, y)
         self._fit(X, y)
 
     def predict(self, X):
-        self._check_input(X)
+        X, _= self._check_input(X)
         return self._predict(X)
 
     def _check_input(self, X, y=None):
@@ -25,14 +25,12 @@ class Estimator:
             X = np.expand_dims(X, axis=1)
 
         if self.y_required:
-            if not y:
+            if y is None:
                 raise ValueError("Argument y is required.")
             if not isinstance(y, np.ndarray):
                 y = np.array(y)
             if y.ndim == 0:
                 raise ValueError("The array y must be non-empty")
-            elif y.ndim == 1:
-                y = np.expand_dims(y, axis=1)
         return X, y 
 
     

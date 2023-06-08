@@ -1,5 +1,6 @@
 from base import BaseOptimizer
 import numpy as np
+import warnings
 
 "https://github.com/timvvvht/Neural-Networks-and-Optimizers-from-scratch/blob/main/optimizers.py"
 "https://towardsdatascience.com/linear-regression-and-gradient-descent-using-only-numpy-53104a834f75"
@@ -8,10 +9,11 @@ import numpy as np
 
 class SGD(BaseOptimizer):
      
-    def __init__(self,  gradient_fn, parameters, learning_rate, loss_fn, batch_size=1, **kwargs):
+    def __init__(self,  gradient_fn, parameters, learning_rate, loss_fn, batch_size=1, verbose=False, **kwargs):
         super().__init__(gradient_fn, parameters, learning_rate, **kwargs)
         self.batch_size = batch_size
         self.loss_fn = loss_fn
+        self.verbose = verbose
 
     def batch_generator(self, X, y):
         n_samples = X.shape[0]
@@ -27,34 +29,37 @@ class SGD(BaseOptimizer):
         return parameters
     
     def optimize(self, X, y):
-        n_samples = X.shape[0]
         iteration = 0
-        error = np.inf
         parameters = self.parameters
+        error = float("inf")
         prev_loss = None
-        
-        while iteration < self.max_iter and error > self.tol:
-            random_indices = np.random.choice(n_samples, size=self.batch_size, replace=False)
-            X_batch, y_batch = X[random_indices], y[random_indices]
-            
-            gradients = self.gradient_fn(X_batch, y_batch, parameters)
-            if prev_loss is None:
-                prev_loss = self.loss_fn(X, y, parameters)
-            parameters = self.update_parameters(parameters, gradients)
-            loss = self.loss_fn(X, y, parameters)
-            error = abs(np.mean(loss - prev_loss))
-            prev_loss = loss
-            """
-            # Calculate error
-            y_pred = self.loss(X)
-            error = np.mean((y_pred - y) ** 2)
-            
-            # Save history
-            self.history['error'].append(error)
-            """
 
+        while iteration < self.max_iter and error > self.tol:
+            loss_batch = 0
+            for batch in self.batch_generator(X, y):
+                X_batch, y_batch = batch
+            
+                gradients = self.gradient_fn(X_batch, y_batch, parameters)
+
+                parameters = self.update_parameters(parameters, gradients)
+                self.history["parameters"].append(parameters)
+                loss = self.loss_fn(X_batch, y_batch, parameters)
+             
+                # Calculate error
+                loss_batch += loss*y_batch.shape[0]
             iteration += 1
-        
+            loss_batch /= y.shape[0]
+            self.history['loss'].append(loss_batch)
+            if prev_loss is None:
+                prev_loss = loss_batch
+            else:
+                error = abs(prev_loss - loss_batch)
+                if self.verbose:
+                    print(f"{iteration}: prev_loss: {prev_loss :.3f} loss_batch: {loss_batch :.3f} err: {error :.3f}")
+                prev_loss = loss_batch
+            
+        if iteration == self.max_iter:
+            warnings.warn("SGD did not converge!")
         return parameters
 
 if __name__ == "__main__":
