@@ -106,30 +106,22 @@ class DecisionTree:
             + (n_right/n_total)*self.criterion_fn(y_right)
 
     def _best_split(self, X, y, max_features):
-        #print("In _best_split!!")
-        #print("===============")
         n_features = X.shape[1]
 
         if max_features is None:
             max_features = X.shape[1]
 
-        #print(f"n_features: {n_features} max_features: {max_features}")
         features_idx = np.random.choice(n_features, max_features, replace=False)
 
         best_feature_idx = None
         best_threshold = None
         min_impurity = float("inf")
 
-        #print("features_idx", features_idx)
         for feature_idx in features_idx:
-            #print(f"feature_idx: {feature_idx}")
             thresholds = self._get_feature_thresholds(X, feature_idx)
-            #print(f"thesholds: {thresholds}")
             for threshold in thresholds:
                 split_impurity = self._leafs_impurity(X, y, feature_idx, threshold)
-                #print(f"feature_idx: {feature_idx} threshold: {threshold} impur: {split_impurity}")
                 if split_impurity < min_impurity:
-                    #print("Split updated!!!!!!")
                     best_feature_idx = feature_idx
                     best_threshold = threshold
                     min_impurity = split_impurity
@@ -137,7 +129,6 @@ class DecisionTree:
 
     def _is_finished(self, y, depth):
         unique_classes = len(np.unique(y))
-        #print(f"depth: {depth} unique: {unique_classes} y size: {y.size}")
         n_samples = y.size
         if (depth > self.max_depth) or (n_samples < self.max_samples_split) or (unique_classes == 1):
             return True
@@ -157,11 +148,9 @@ class DecisionTree:
             return Node(value=prediction)
         
         feature_idx, threshold = self._best_split(X, y, self.max_features)
-        #print(f"depth: {depth} feature_idx: {feature_idx} threshold: {threshold}")
         left_idx, right_idx = self._split_mask(X, feature_idx, threshold)
         left_child = self._build_tree(X[left_idx, :], y[left_idx], depth + 1)
         right_child = self._build_tree(X[right_idx, :], y[right_idx], depth + 1)
-        print(f"depth: {depth} left child: {left_child} right child: {right_child}")
         return Node(feature_idx=feature_idx, threshold=threshold, left=left_child, right=right_child)
     
     def _traverse_tree(self, x, node):
@@ -170,21 +159,60 @@ class DecisionTree:
         
         feature_idx = node.feature_idx
         threshold = node.threshold
-        print(f"Node val: {node.value} fet_idx: {node.feature_idx} threshold: {node.threshold} left: {node.left} right: {node.right}")
-        print("++++++++++++++++++++++++++++++++")
         if x[feature_idx] <= threshold:
             return self._traverse_tree(x, node.left)
         return self._traverse_tree(x, node.right)
     
     def fit(self, X, y):
         X, y = self._check_inputs(X, y)
-        print(f"Fit X type {type(X)}")
         self.root = self._build_tree(X, y, depth=0)
 
     def predict(self, X):
         X = self._check_X(X)
         predictions = [ self._traverse_tree(x, self.root) for x in X ]
         return np.array(predictions)
+    
+        
+def print_tree(tree):
+    def height(root):
+        if root is None:
+            return 0
+        return max(height(root.left), height(root.right))+1
+    
+    
+    def getcol(h):
+        if h == 1:
+            return 1
+        return getcol(h-1) + getcol(h-1) + 1
+    
+    
+    def printTree(M, root, col, row, height, type):
+        if root is None:
+            return
+        if root.is_leaf():
+            M[row][col] = f"{root.value :09.1f}"
+        else:
+            if type == "left":
+                M[row][col] = f"X[{root.feature_idx}]<={root.threshold :02.1f}"
+            else:
+                M[row][col] = f"X[{root.feature_idx}]> {root.threshold :02.1f}"
+        printTree(M, root.left, col-pow(2, height-2), row+1, height-1, "left")
+        printTree(M, root.right, col+pow(2, height-2), row+1, height-1, "right")
+        
+        
+
+    h = height(tree.root)
+    col = getcol(h)
+    M = [[0 for _ in range(col)] for __ in range(h)]
+    printTree(M, tree.root, col//2, 0, h, "left")
+    for i in M:
+        for j in i:
+            if j == 0:
+                print("        ", end="")
+            else:
+                print(j, end="")
+        print("")
+            
  
 
 
@@ -198,66 +226,24 @@ class DecisionTreeRegressor(DecisionTree):
         super().__init__(criterion, max_depth, max_features, max_samples_split, regression=True)
 
 
-def draw_decision_tree(tree, indent=''):
-    if isinstance(tree, dict):
-        feature_idx = tree['feature_idx']
-        threshold = tree['threshold']
-        print(indent + 'X[' + str(feature_idx) + '] <= ' + str(threshold))
-        draw_decision_tree(tree['left'], indent + '    /')
-        draw_decision_tree(tree['right'], indent + '    \\')
-    else:
-        print(indent + str(tree))
 
-from sklearn.datasets import make_classification
-X_train, y_train = make_classification(
-    n_features=6, n_redundant=0, n_informative=4, random_state=1, n_clusters_per_class=1
-)
-tree = DecisionTreeClassifier(criterion='gini', max_depth=2)
-print(f"Outside: X type {type(X_train)}")
-tree.fit(X_train, y_train)
-print("DT Classifier fitted!")
-tree.predict(X_train)
-#draw_decision_tree(tree.tree)
+if __name__ == "__main__":
+    from sklearn.datasets import make_classification, make_regression
+    X_train, y_train = make_classification(
+        n_features=6, n_redundant=0, n_informative=4, random_state=1, n_clusters_per_class=1
+    )
+    tree = DecisionTreeClassifier(criterion='gini', max_depth=2)
+    tree.fit(X_train, y_train)
+    print("DT Classifier fitted!")
+    tree.predict(X_train)
+    #draw_decision_tree(tree.tree)
+    print_tree(tree)
 
-
-def height(tree):
-    if isinstance(tree, dict):
-        left_height = height(tree['left'])
-        right_height = height(tree['right'])
-        return max(left_height, right_height) + 1
-    else:
-        return 0
-
-
-def print_tree(tree):
-    h = height(tree)
-    col = 2 ** h - 1
-    M = [[' ' for _ in range(col * 2 - 1)] for _ in range(h)]
-    print_tree_helper(M, tree, col - 1, 0, h)
-
-
-def print_tree_helper(M, tree, col, row, height):
-    if isinstance(tree, dict):
-        feature_idx = tree['feature_idx']
-        threshold = tree['threshold']
-        M[row][int(col)] = f"X[{feature_idx}] <= {threshold}"
-
-        level_widths = [2 ** (h - row - 1) for h in range(height)]
-        level_width = sum(level_widths[:height - row - 1])
-
-        if len(M[row + 1]) <= col - level_width:
-            M[row + 1].extend([' '] * (col - level_width - len(M[row + 1]) + 1))
-        if len(M[row + 1]) <= col + level_width:
-            M[row + 1].extend([' '] * (col + level_width - len(M[row + 1]) + 1))
-
-        print_tree_helper(M, tree['left'], col - level_width, row + 1, height)
-        print_tree_helper(M, tree['right'], col + level_width, row + 1, height)
-    else:
-        M[row][int(col)] = str(tree)
-
-# Example usage:
-X = np.array([[1, 2], [3, 4], [5, 6]])
-y = np.array([0, 1, 0])
-clf = DecisionTreeClassifier()
-print(f"Outside: X type {type(X)}")
-clf.fit(X, y)
+    X_train, y_train = make_regression(
+        n_features=6, n_informative=4, random_state=1)
+    tree = DecisionTreeRegressor(criterion='mse', max_depth=2)
+    tree.fit(X_train, y_train)
+    print("DT Regressor fitted!")
+    tree.predict(X_train)
+    #draw_decision_tree(tree.tree)
+    print_tree(tree)
