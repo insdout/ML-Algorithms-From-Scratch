@@ -69,5 +69,14 @@ Contributions to this repository are welcome! If you have any suggestions, impro
 
 This project is licensed under the [MIT License](LICENSE).
 
-TODO
+TODO:
+- Add Logistic Regression
+- Add Gradient Boosting
+- Add Random Forest
+- Add EM Algorithm
+- Add Naive Bayess
+- Add KNN
+- Add SVM
+- Add Spectral Clustering
+
 
