@@ -22,10 +22,11 @@ By studying and experimenting with these implementations, you can gain insights 
 The repository has the following structure:
 ```
 ├── mllib
+|   ├── __init__.py
 │   ├── base.py
 │   ├── decision_tree.py
-│   ├── __init__.py
-│   ├── linear_models.py
+│   ├── linear_regression.py
+│   ├── logistic_regression.py
 │   └── sgd.py
 ├── README.md
 └── tutorials
@@ -45,7 +46,8 @@ Here are some of the machine learning algorithms implemented in this repository:
 
 - `base.py`: Contains the base classes and utilities used by other algorithms.
 - `decision_tree.py`: Implements the decision tree algorithm for classification and regression tasks.
-- `linear_models.py`: Provides implementations of linear regression and logistic regression models.
+- `linear_regression.py`: Provides implementations of linear regression.
+- `logistic_regression.py` : Is implementation of logistic regression models.
 - `sgd.py`: Implements the stochastic gradient descent optimization algorithm.
 
 Feel free to explore the implementations, experiment with different algorithms, and customize them to meet your specific requirements.
@@ -70,7 +72,7 @@ Contributions to this repository are welcome! If you have any suggestions, impro
 This project is licensed under the [MIT License](LICENSE).
 
 TODO:
-- Add Logistic Regression
+- ~~Add Logistic Regression~~
 - Add Gradient Boosting
 - Add Random Forest
 - Add EM Algorithm

@@ -10,26 +10,31 @@ class BaseEstimator:
         self._fit(X, y)
 
     def predict(self, X):
-        X, _= self._check_input(X)
+        X = self._check_x(X)
+        if self.fit_required:
+            raise ValueError("Fit method should be called first.")
         return self._predict(X)
 
-    def _check_input(self, X, y=None):
+    def _check_x(self, X):
         if not isinstance(X, np.ndarray):
             X = np.array(X)
-
-        if X.ndim == 0:
+        if X.size == 0:
             raise ValueError("The array X must be non-empty")
         elif X.ndim > 2:
             raise ValueError("Input must be a 2-dimensional array.")
         elif X.ndim == 1:
             X = np.expand_dims(X, axis=1)
+        return X
+    
+    def _check_input(self, X, y=None):
+        X = self._check_x(X)
 
         if self.y_required:
             if y is None:
                 raise ValueError("Argument y is required.")
             if not isinstance(y, np.ndarray):
                 y = np.array(y)
-            if y.ndim == 0:
+            if y.size == 0:
                 raise ValueError("The array y must be non-empty")
         return X, y 
 
