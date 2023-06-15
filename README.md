@@ -71,6 +71,8 @@ Contributions to this repository are welcome! If you have any suggestions, impro
 
 This project is licensed under the [MIT License](LICENSE).
 
+---
+
 TODO:
 - ~~Add Logistic Regression~~
 - Add Gradient Boosting
@@ -80,5 +82,19 @@ TODO:
 - Add KNN
 - Add SVM
 - Add Spectral Clustering
+- Add RMSProp
+- Add Adam
+- Add KNeighbors
+- Add SVD
+- Add QR
+- Add matrix inverse via SVD
+- Add eigendecomposition
+- Add PCA  
+
+
+---
+
+- [] Add comments and docstrings  
+- [ ] Refactor as package
 
 
