@@ -73,7 +73,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-TODO:
+TODO: Algorithms to add.
 - ~~Add Logistic Regression~~
 - Add Gradient Boosting
 - Add Random Forest
@@ -93,8 +93,9 @@ TODO:
 
 
 ---
+TODO: General things.
 
-- [] Add comments and docstrings  
+- [ ] Add comments and docstrings  
 - [ ] Refactor as package
 
 
