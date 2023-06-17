@@ -46,6 +46,7 @@ Here are some of the machine learning algorithms implemented in this repository:
 
 - `base.py`: Contains the base classes and utilities used by other algorithms.
 - `decision_tree.py`: Implements the decision tree algorithm for classification and regression tasks.
+- `random_forest.py`: Contains the implementation of Random Forest.
 - `linear_regression.py`: Provides implementations of linear regression.
 - `logistic_regression.py` : Is implementation of logistic regression models.
 - `sgd.py`: Implements the stochastic gradient descent optimization algorithm.
@@ -76,7 +77,7 @@ This project is licensed under the [MIT License](LICENSE).
 TODO: Algorithms to add.
 - ~~Add Logistic Regression~~
 - Add Gradient Boosting
-- Add Random Forest
+- ~~Add Random Forest~~
 - Add EM Algorithm
 - Add Naive Bayess
 - Add KNN
