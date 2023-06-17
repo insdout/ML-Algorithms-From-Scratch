@@ -37,7 +37,7 @@ class Node:
 
 
 class DecisionTree:
-    def __init__(self, criterion="gini", max_depth=3, max_features=1, max_samples_split=2, regression=False):
+    def __init__(self, criterion="gini", max_depth=3, max_features=1, min_samples_split=2, regression=False):
         self.root = None
         self.criterion = criterion
         if self.criterion == "gini":
@@ -50,7 +50,7 @@ class DecisionTree:
             raise ValueError(f"{criterion} is not implemented.")
         self.max_depth = max_depth
         self.max_features = max_features
-        self.max_samples_split = max_samples_split
+        self.min_samples_split = min_samples_split
         self.regression = regression
         if self.regression:
             if self.criterion not in {"mae", "mse"}:
@@ -105,11 +105,21 @@ class DecisionTree:
         return (n_left/n_total)*self.criterion_fn(y_left) \
             + (n_right/n_total)*self.criterion_fn(y_right)
 
-    def _best_split(self, X, y, max_features):
+    def _best_split(self, X, y):
         n_features = X.shape[1]
 
-        if max_features is None:
-            max_features = X.shape[1]
+        if self.max_features is None:
+            max_features = n_features
+        elif self.max_features == "sqrt":
+            max_features = int(np.sqrt(n_features))
+        elif self.max_features == "log2":
+            max_features = int(np.log2(n_features))
+        elif self.max_features == "div3":
+            max_features = int(n_features/3)
+        elif isinstance(self.max_features, int):
+            max_features = min(self.max_features, n_features)
+        else:
+            raise ValueError("max_features could be: None, 'sqrt', 'log2' or int.")
 
         features_idx = np.random.choice(n_features, max_features, replace=False)
 
@@ -130,7 +140,7 @@ class DecisionTree:
     def _is_finished(self, y, depth):
         unique_classes = len(np.unique(y))
         n_samples = y.size
-        if (depth > self.max_depth) or (n_samples < self.max_samples_split) or (unique_classes == 1):
+        if (self.max_depth and (depth >= self.max_depth)) or (n_samples < self.min_samples_split) or (unique_classes == 1):
             return True
         return False
     
@@ -144,10 +154,10 @@ class DecisionTree:
                 else:
                     raise ValueError(f"{self.criterion} is not allowed for regression! Please use mse or mae.")
             else:
-                prediction = np.argmax(np.bincount(y))
+                prediction = np.bincount(y, minlength=self.n_classes_)/y.shape[0]
             return Node(value=prediction)
         
-        feature_idx, threshold = self._best_split(X, y, self.max_features)
+        feature_idx, threshold = self._best_split(X, y)
         left_idx, right_idx = self._split_mask(X, feature_idx, threshold)
         left_child = self._build_tree(X[left_idx, :], y[left_idx], depth + 1)
         right_child = self._build_tree(X[right_idx, :], y[right_idx], depth + 1)
@@ -165,12 +175,11 @@ class DecisionTree:
     
     def fit(self, X, y):
         X, y = self._check_inputs(X, y)
+        self.n_classes_ = len(np.unique(y))
         self.root = self._build_tree(X, y, depth=0)
 
     def predict(self, X):
-        X = self._check_X(X)
-        predictions = [ self._traverse_tree(x, self.root) for x in X ]
-        return np.array(predictions)
+        raise NotImplementedError("Subclasses must implement predict method.")
     
         
 def print_tree(tree):
@@ -190,7 +199,7 @@ def print_tree(tree):
         if root is None:
             return
         if root.is_leaf():
-            M[row][col] = f"{root.value :09.1f}"
+            M[row][col] = f"{ root.value}"
         else:
             if type == "left":
                 M[row][col] = f"X[{root.feature_idx}]<={root.threshold :02.1f}"
@@ -208,22 +217,37 @@ def print_tree(tree):
     for i in M:
         for j in i:
             if j == 0:
-                print("        ", end="")
+                print("", end="")
             else:
-                print(j, end="")
+                print(j, end="   ")
         print("")
             
  
 
 
 class DecisionTreeClassifier(DecisionTree):
-    def __init__(self, criterion="gini", max_depth=3, max_features=None, max_samples_split=2):
-        super().__init__(criterion, max_depth, max_features, max_samples_split, regression=False)
+    def __init__(self, criterion="gini", max_depth=3, max_features=None, min_samples_split=2):
+        super().__init__(criterion, max_depth, max_features, min_samples_split, regression=False)
+
+    def predict(self, X):
+        probabilities = self.predict_proba(X)
+        return np.argmax(probabilities, axis=1)
+    
+    def predict_proba(self, X):
+        X = self._check_X(X)
+        predictions = [self._traverse_tree(x, self.root) for x in X]
+        return np.array(predictions)
+
     
 
 class DecisionTreeRegressor(DecisionTree):
-    def __init__(self, criterion="mse", max_depth=3, max_features=None, max_samples_split=2):
-        super().__init__(criterion, max_depth, max_features, max_samples_split, regression=True)
+    def __init__(self, criterion="mse", max_depth=3, max_features=None, min_samples_split=2):
+        super().__init__(criterion, max_depth, max_features, min_samples_split, regression=True)
+
+    def predict(self, X):
+        X = self._check_X(X)
+        predictions = [self._traverse_tree(x, self.root) for x in X]
+        return np.array(predictions)
 
 
 
@@ -247,3 +271,23 @@ if __name__ == "__main__":
     tree.predict(X_train)
     #draw_decision_tree(tree.tree)
     print_tree(tree)
+
+    from sklearn.datasets import make_classification, make_regression
+    from sklearn.model_selection import train_test_split
+    from sklearn import metrics
+    X, y = make_classification(
+        n_features=20, n_redundant=2, n_informative=15, random_state=42, n_clusters_per_class=3, class_sep=0.1, n_classes=2
+    )
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+    rf = DecisionTreeClassifier(criterion='gini', max_depth=3, min_samples_split=10)
+    rf.fit(X_train, y_train)
+    print("=============")
+    print_tree(rf)
+    print()
+    pred = rf.predict(X_test)
+    pred_prob = rf.predict_proba(X_test)
+    print("Confusion Matrix:")
+    print(metrics.confusion_matrix(y_test, pred))
+    print(f"predictions: {pred[:10]}")
+    print(f"predictions proba: {pred_prob}")
+    print()
