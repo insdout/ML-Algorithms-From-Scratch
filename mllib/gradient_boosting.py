@@ -35,5 +35,6 @@ if __name__ == "__main__":
     print(metrics.confusion_matrix(y_test, pred))
     print()
 
+
     X_train, y_train = make_regression(
         n_features=6, n_informative=4, random_state=1)
