@@ -4,26 +4,50 @@ from decision_tree import DecisionTreeRegressor
 import numpy as np
 
 
+class Loss:
+    def gradient(self):
+        raise NotImplementedError("Subclasses must implement predict method.")
+    
+    def hessian(self):
+        raise NotImplementedError("Subclasses must implement predict method.")
+    
+    def raw_prediction_to_decision(self):
+        raise NotImplementedError("Subclasses must implement predict method.")
+    
+    def gain(self):
+        raise NotImplementedError("Subclasses must implement predict method.")
+    
+    
+
 class GradientBoosting(BaseEstimator):
-    def __init__(self, loss_fn, criterion, n_estimators, max_depth, max_features, min_samples_split):
-        self.loss_fn = loss_fn
+    def __init__(self, loss, criterion, learning_rate, n_estimators, max_depth, max_features, min_samples_split):
+        self.loss = loss
         self.criterion = criterion
         self.max_depth = max_depth
         self.max_features = max_features
         self.min_samplees_split = min_samples_split
         self.n_estimators = n_estimators
+        self.learning_rate = learning_rate
+        self.estimators = []
 
     def _initial_prediction(self, y):
         raise NotImplementedError("Subclasses must implement predict method.")
 
     def _fit(self, X, y):
         y_pred = self._initial_prediction(y)
-        for _ in range(self.n_estimators):
-            residuals = 
-        pass
+        for estimator in self.estimators:
+            residuals = self.loss.gradient(y, y_pred)
+            estimator.fit(X, y)
+            self.estimators.append(estimator)
+            predictions = self.estimator.predict(X)
+            y_pred += self.learning_rate * predictions
 
-    def predict(self, X):
-        pass
+    def _predict(self, X):
+        prediction = self._initial_prediction(X)
+        for estimator in self.estimators:
+            prediction += self.learning_rate * estimator.predict(X)
+        prediction = self.loss.raw_prediction_to_decision(prediction)
+        return prediction
 
 
 if __name__ == "__main__":
