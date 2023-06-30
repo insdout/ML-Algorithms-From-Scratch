@@ -3,17 +3,23 @@ from decision_tree import DecisionTreeClassifier
 from decision_tree import DecisionTreeRegressor
 import numpy as np
 
+
 class GradientBoosting(BaseEstimator):
-    def __init__(self, loss_fn, loss_grad_fn, criterion, n_estimators, max_depth, max_features, min_samples_split):
+    def __init__(self, loss_fn, criterion, n_estimators, max_depth, max_features, min_samples_split):
         self.loss_fn = loss_fn
-        self.loss_grad_fn = loss_grad_fn
         self.criterion = criterion
         self.max_depth = max_depth
         self.max_features = max_features
         self.min_samplees_split = min_samples_split
         self.n_estimators = n_estimators
 
-    def _fit(self, X, y=None):
+    def _initial_prediction(self, y):
+        raise NotImplementedError("Subclasses must implement predict method.")
+
+    def _fit(self, X, y):
+        y_pred = self._initial_prediction(y)
+        for _ in range(self.n_estimators):
+            residuals = 
         pass
 
     def predict(self, X):
