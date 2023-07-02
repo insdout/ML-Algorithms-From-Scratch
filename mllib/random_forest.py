@@ -72,11 +72,11 @@ class RandomForestRegressor(RandomForest):
                 )
 
     def _predict(self, X):
-        # TODO: Refactor for multiclass classification
+        # TODO: Check correctness of RandomForestRegressor
         row_prediction = []
         for estimator in self.estimators:
             row_prediction.append(estimator.predict(X))
-        return np.mean(row_prediction)
+        return np.mean(row_prediction, axis=0)
 
 if __name__ == "__main__":
     from sklearn.datasets import make_classification, make_regression
