@@ -1,26 +1,47 @@
 from base import BaseEstimator
-from decision_tree import DecisionTreeClassifier
 from decision_tree import DecisionTreeRegressor
 import numpy as np
 
 
 class Loss:
-    def gradient(self):
-        raise NotImplementedError("Subclasses must implement predict method.")
+    def loss_fn(self, y, predictions):
+        raise NotImplementedError("Subclasses must implement loss_fn method")
     
-    def hessian(self):
-        raise NotImplementedError("Subclasses must implement predict method.")
+    def gradient(self, y, predictions):
+        raise NotImplementedError("Subclasses must implement gradient method.")
     
-    def raw_prediction_to_decision(self):
-        raise NotImplementedError("Subclasses must implement predict method.")
+    def negative_gradient(self, y, predictions):
+        return -self.gradient(y, predictions)
     
-    def gain(self):
-        raise NotImplementedError("Subclasses must implement predict method.")
+    def hessian(self, y, predictions):
+        raise NotImplementedError("Subclasses must implement hessian method.")
     
     
 
-class GradientBoosting(BaseEstimator):
-    def __init__(self, loss, criterion, learning_rate, n_estimators, max_depth, max_features, min_samples_split):
+class RegressionLoss(Loss):
+    # MSE Loss
+    def loss_fn(self, y, predictions):
+        return (y - predictions)**2 
+    
+    def gradient(self, y, predictions):
+        return -(y - predictions)
+    
+    def hessian(self, y, predictions):
+        return np.ones_like(y)
+
+
+class GradientBoostingRegressor(BaseEstimator):
+    def __init__(
+            self, 
+            loss=RegressionLoss(), 
+            criterion="mse", 
+            learning_rate=0.1, 
+            n_estimators=100, 
+            max_depth=2, 
+            max_features="div3", 
+            min_samples_split=2, 
+            weighted_estimators=True
+            ):
         self.loss = loss
         self.criterion = criterion
         self.max_depth = max_depth
@@ -28,43 +49,63 @@ class GradientBoosting(BaseEstimator):
         self.min_samplees_split = min_samples_split
         self.n_estimators = n_estimators
         self.learning_rate = learning_rate
-        self.estimators = []
+        self.weighted_estimators = weighted_estimators
+        self.estimator_weights = []
+        self.estimators = [
+            DecisionTreeRegressor(
+            criterion=self.criterion, 
+            max_depth=self.max_depth, 
+            max_features=self.max_features, 
+            min_samples_split=self.min_samplees_split) for _ in range(self.n_estimators)
+        ]
+        self.inital_estimator=None
 
     def _initial_prediction(self, y):
-        raise NotImplementedError("Subclasses must implement predict method.")
+        return np.mean(y)
 
     def _fit(self, X, y):
-        y_pred = self._initial_prediction(y)
-        for estimator in self.estimators:
-            residuals = self.loss.gradient(y, y_pred)
-            estimator.fit(X, y)
-            self.estimators.append(estimator)
-            predictions = self.estimator.predict(X)
-            y_pred += self.learning_rate * predictions
+        self.inital_estimator = self._initial_prediction(y)
+        y_pred = self.inital_estimator*np.ones_like(y)
+        for i, estimator in enumerate(self.estimators):
+            residuals = self.loss.negative_gradient(y, y_pred)
+            estimator.fit(X, residuals)
+            predictions = estimator.predict(X)
+            w = 1.0
+            if self.weighted_estimators:
+                w = self._compute_estimator_weights(y, predictions, residuals)
+            self.estimator_weights.append(w)
+            y_pred += self.learning_rate * w * predictions
+            self.fit_required = False
 
     def _predict(self, X):
-        prediction = self._initial_prediction(X)
-        for estimator in self.estimators:
-            prediction += self.learning_rate * estimator.predict(X)
-        prediction = self.loss.raw_prediction_to_decision(prediction)
+        prediction = self.inital_estimator*np.ones(X.shape[0])
+        for w, estimator in zip(self.estimator_weights, self.estimators):
+            prediction += self.learning_rate * w * estimator.predict(X)
         return prediction
 
+    def _compute_estimator_weights(self, y, predictions, residuals):
+        nominator = np.sum(self.loss.gradient(y, predictions))
+        denominator = np.sum(self.loss.hessian(y, predictions))
+        return nominator/denominator
+    
 
 if __name__ == "__main__":
     from sklearn.datasets import make_classification, make_regression
+    from random_forest import RandomForestRegressor
     from sklearn.model_selection import train_test_split
     from sklearn import metrics
-    X, y = make_classification(
-        n_features=20, n_redundant=2, n_informative=15, random_state=42, n_clusters_per_class=1, class_sep=2, n_classes=3
-    )
+    X, y  = make_regression(
+        n_features=25, n_informative=15)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
-    rf = GradientBoostingClassifier(n_estimators=100)
+    gb = GradientBoostingRegressor(n_estimators=500, learning_rate=0.01, weighted_estimators=False)
+    rf = RandomForestRegressor()
+    gb.fit(X_train, y_train)
     rf.fit(X_train, y_train)
-    pred = rf.predict(X_test)
-    print("Confusion Matrix:")
-    print(metrics.confusion_matrix(y_test, pred))
-    print()
+    pred_gb = gb.predict(X_test)
+    pred_rf = rf.predict(X_test)
+    print(f"y shape: {y_test.shape} gb shape: {pred_gb.shape} rf shape: {pred_rf.shape}")
+    print((100*(pred_gb-y_test)/y_test).astype(int))
+    print((100*(pred_rf-y_test)/y_test).astype(int))
+ 
+ 
 
-
-    X_train, y_train = make_regression(
-        n_features=6, n_informative=4, random_state=1)
