@@ -76,7 +76,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 TODO: Algorithms to add.
 - ~~Add Logistic Regression~~
-- Add Gradient Boosting
+- ~~Add Gradient Boosting~~
 - ~~Add Random Forest~~
 - Add EM Algorithm
 - Add Naive Bayess
@@ -90,7 +90,8 @@ TODO: Algorithms to add.
 - Add QR
 - Add matrix inverse via SVD
 - Add eigendecomposition
-- Add PCA  
+- Add PCA 
+- Add AdaBoost 
 
 
 ---
