@@ -105,7 +105,6 @@ if __name__ == "__main__":
     from scipy.spatial import distance
     from numpy import linalg as LA
     
-
     x1 = [1, 2, 3]
     x2 = [4, 5, 6]
     w = [1, 2, 4]
