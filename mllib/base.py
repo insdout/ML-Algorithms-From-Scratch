@@ -1,6 +1,7 @@
 import numpy as np
 from collections import defaultdict
 
+
 class BaseEstimator:
     y_required = True
     fit_required = True
@@ -25,7 +26,7 @@ class BaseEstimator:
         elif X.ndim == 1:
             X = np.expand_dims(X, axis=1)
         return X
-    
+
     def _check_input(self, X, y=None):
         X = self._check_x(X)
 
@@ -36,29 +37,43 @@ class BaseEstimator:
                 y = np.array(y)
             if y.size == 0:
                 raise ValueError("The array y must be non-empty")
-        return X, y 
+        return X, y
 
-    
     def _fit(self, X, y=None):
         raise NotImplementedError("Subclasses must implement _fit method.")
 
     def _predict(self, X):
-        raise NotImplementedError("Subclasses must implement _predict method.") 
-    
+        raise NotImplementedError("Subclasses must implement _predict method.")
+
 
 class BaseOptimizer:
-    def __init__(self, gradient_fn, parameters, learning_rate, tolerance=1e-8, max_iter=1000):
+    def __init__(
+            self,
+            gradient_fn,
+            parameters,
+            learning_rate,
+            tolerance=1e-8,
+            max_iter=1000
+    ):
         self.learning_rate = learning_rate
         self.gradient_fn = gradient_fn
         self.parameters = parameters
         self.tol = tolerance
         self.max_iter = max_iter
         self.history = defaultdict(list)
-    
+
+    def batch_generator(self, X, y):
+        n_samples = X.shape[0]
+        batch_size = self.batch_size
+        indices = np.arange(n_samples)
+        np.random.shuffle(indices)
+        for i in range(0, n_samples, batch_size):
+            batch_indices = indices[i:i+batch_size]
+            yield X[batch_indices], y[batch_indices]
+
     def update_parameters(self, parameters, gradient):
-        raise NotImplementedError("Subclasses must implement update_parameters method.")
-    
+        raise NotImplementedError(
+            "Subclasses must implement update_parameters method.")
+
     def optimize(self):
         raise NotImplementedError("Subclasses must implement optimize method.")
-
-    
