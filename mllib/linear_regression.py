@@ -1,5 +1,5 @@
 from base import BaseEstimator
-from sgd import SGD
+from mllib.optimizers import SGD
 import numpy as np
 
 

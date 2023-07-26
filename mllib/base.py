@@ -52,10 +52,12 @@ class BaseOptimizer:
             gradient_fn,
             parameters,
             learning_rate,
+            batch_size,
             tolerance=1e-8,
             max_iter=1000
     ):
         self.learning_rate = learning_rate
+        self.batch_size = batch_size
         self.gradient_fn = gradient_fn
         self.parameters = parameters
         self.tol = tolerance

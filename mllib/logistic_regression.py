@@ -1,6 +1,6 @@
 import numpy as np
 from base import BaseEstimator
-from sgd import SGD
+from mllib.optimizers import SGD
 
 
 class LogisticRegression(BaseEstimator):
