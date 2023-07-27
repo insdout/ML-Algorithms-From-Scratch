@@ -67,6 +67,19 @@ class SGD(BaseOptimizer):
         return parameters
 
 
+class RMSProp(BaseOptimizer):
+    def __init__(self):
+        super().__init__()
+        pass
+
+
+class Adam(BaseOptimizer):
+    def __init__(self):
+        super().__init__()
+        pass
+
+
+
 if __name__ == "__main__":
     def loss_fn(z, y, x):
         return x**2 - 6*x + 9
