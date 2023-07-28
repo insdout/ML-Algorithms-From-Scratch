@@ -72,12 +72,23 @@ class RMSProp(BaseOptimizer):
         super().__init__()
         pass
 
+    def update_parameters(self, parameters, gradient):
+        pass
+
+    def optimize(self):
+        pass
+
 
 class Adam(BaseOptimizer):
     def __init__(self):
         super().__init__()
         pass
+    
+    def update_parameters(self, parameters, gradient):
+        pass
 
+    def optimize(self):
+        pass
 
 
 if __name__ == "__main__":
