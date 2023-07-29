@@ -80,6 +80,11 @@ class RMSProp(BaseOptimizer):
 
 
 class Adam(BaseOptimizer):
+    """_summary_
+
+    Args:
+        BaseOptimizer (_type_): _description_
+    """
     def __init__(self):
         super().__init__()
         pass
