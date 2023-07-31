@@ -67,7 +67,6 @@ class SGD(BaseOptimizer):
         return parameters
 
 
-
 class RMSProp(BaseOptimizer):
     def __init__(
             self,
@@ -146,7 +145,7 @@ class Adam(BaseOptimizer):
     def __init__(self):
         super().__init__()
         pass
-    
+
     def update_parameters(self, parameters, gradient):
         pass
 
@@ -174,7 +173,7 @@ if __name__ == "__main__":
     assert abs(x_opt-3) <= 1e2, "Wrong answer"
     print(f"x_opt: {x_opt} f_opy: {loss_fn(None, None, x_opt)} "
           f"grad_fn: {gradient_fn(None, None, x_opt)}")
-    
+  
     rmsprop = RMSProp(
         gradient_fn=gradient_fn,
         parameters=np.array([20.]),
