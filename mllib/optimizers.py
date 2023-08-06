@@ -22,8 +22,8 @@ class SGD(BaseOptimizer):
             gradient_fn,
             parameters,
             learning_rate,
-            batch_size, 
-            **kwargs)  
+            batch_size,
+            **kwargs)
         self.loss_fn = loss_fn
         self.verbose = verbose
 
@@ -64,6 +64,46 @@ class SGD(BaseOptimizer):
 
         if iteration == self.max_iter:
             warnings.warn("SGD did not converge!")
+        return parameters
+
+
+class SGDNAG(SGD):
+    """
+    SGD with Nesterov Accelerated Momentum.
+    link:
+    http://www.cs.toronto.edu/%7Ehinton/absps/momentum.pdf
+    
+    theta_{NAG} = theta + mu*v_t
+    v_{t+1} = mu*v_t - eta*grad(theta_{NAG})
+    theta_{NAG} += mu*v_{t+1} - eta*grad(theta_{NAG})
+    """
+    def __init__(
+            self,
+            gradient_fn,
+            parameters,
+            learning_rate,
+            loss_fn,
+            momentum=0.7,
+            batch_size=1,
+            verbose=False,
+            **kwargs
+            ):
+        super().__init__(
+            self,
+            gradient_fn,
+            parameters,
+            learning_rate,
+            loss_fn,
+            batch_size,
+            verbose,
+            **kwargs
+            )
+        self.momentum = momentum
+        self.velocity = np.zeros_like(parameters)
+
+    def update_parameters(self, parameters, gradients):
+        self.velocity = self.momentum*self.velocity - self.learning_rate*gradients
+        parameters += self.momentum*self.velocity - self.learning_rate*gradients
         return parameters
 
 
