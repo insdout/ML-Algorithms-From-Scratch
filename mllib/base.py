@@ -72,6 +72,9 @@ class BaseOptimizer:
         for i in range(0, n_samples, batch_size):
             batch_indices = indices[i:i+batch_size]
             yield X[batch_indices], y[batch_indices]
+  
+    def clear_history(self):
+        self.history = defaultdict(list)
 
     def update_parameters(self, parameters, gradient):
         raise NotImplementedError(
