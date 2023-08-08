@@ -63,6 +63,7 @@ class BaseOptimizer:
         self.tol = tolerance
         self.max_iter = max_iter
         self.history = defaultdict(list)
+        self.history["parameters"].append(list(parameters))
 
     def batch_generator(self, X, y):
         n_samples = X.shape[0]
@@ -72,7 +73,7 @@ class BaseOptimizer:
         for i in range(0, n_samples, batch_size):
             batch_indices = indices[i:i+batch_size]
             yield X[batch_indices], y[batch_indices]
-  
+
     def clear_history(self):
         self.history = defaultdict(list)
 

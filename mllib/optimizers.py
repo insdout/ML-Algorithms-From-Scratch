@@ -45,7 +45,7 @@ class SGD(BaseOptimizer):
                 gradients = self.gradient_fn(X_batch, y_batch, parameters)
 
                 parameters = self.update_parameters(parameters, gradients)
-                self.history["parameters"].append(parameters)
+                self.history["parameters"].append(list(parameters))
                 loss = self.loss_fn(X_batch, y_batch, parameters)
 
                 # Calculate error
@@ -108,7 +108,7 @@ class SGDNAG(SGD):
 
 class RMSProp(SGD):
     """
-    RMSProp algorithm
+    RMSProp algorithm with momentum
     
     """
     def __init__(
@@ -208,7 +208,7 @@ if __name__ == "__main__":
     assert abs(x_opt-3) <= 1e2, "Wrong answer"
     print(f"x_opt: {x_opt} f_opy: {loss_fn(None, None, x_opt)} "
           f"grad_fn: {gradient_fn(None, None, x_opt)}")
-  
+
     sgdnag = SGDNAG(
         gradient_fn=gradient_fn,
         parameters=np.array([20.]),
