@@ -83,8 +83,8 @@ TODO: Algorithms to add.
 - ~~Add KNN~~
 - Add SVM
 - Add Spectral Clustering
-- Add RMSProp
-- Add Adam
+- ~~Add RMSProp~~
+- ~~Add Adam~~
 - ~~Add KNeighbors~~
 - Add SVD
 - Add QR
