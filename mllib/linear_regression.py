@@ -1,5 +1,5 @@
 from base import BaseEstimator
-from mllib.optimizers import SGD
+from optimizers import SGD
 import numpy as np
 
 
@@ -63,4 +63,3 @@ if __name__ == "__main__":
     lr2.fit(X, y)
     print(lr2.parameters)
     lr2.predict(X)
-    
