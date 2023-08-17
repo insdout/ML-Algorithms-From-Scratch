@@ -4,7 +4,8 @@ import numpy as np
 
 
 class LinearRegression(BaseEstimator):
-    def __init__(self, solver="closed_form", alpha=0, max_iter=1000, tolerance=1e-2):
+    def __init__(self, solver="closed_form", alpha=0,
+                 max_iter=1000, tolerance=1e-2):
         self.solver = solver
         self.alpha = alpha
         self.max_iter = max_iter
@@ -54,10 +55,10 @@ class LinearRegression(BaseEstimator):
         return X_intercept @ self.parameters
 
 
-
 if __name__ == "__main__":
     from sklearn.datasets import make_regression
-    X, y = make_regression(n_samples=10, n_features=2, noise=1, random_state=42)
+    X, y = make_regression(n_samples=10, n_features=2,
+                           noise=1, random_state=42)
     lr = LinearRegression(solver="sgd", alpha=1, max_iter=1000)
     lr.fit(X, y)
     print(lr.parameters)
