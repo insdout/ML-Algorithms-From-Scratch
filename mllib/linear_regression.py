@@ -20,11 +20,11 @@ class LinearRegression(BaseEstimator):
 
     def closed_form(self, X_intercept, y, parameters):
         I = np.eye(parameters.shape[0])
-        I[0,0] = 0
+        I[0, 0] = 0
         return np.linalg.inv(X_intercept.T @ X_intercept + self.alpha*I) @ X_intercept.T @ y
 
     def _add_intercept(self, X):
-        return np.c_[np.ones((X.shape[0], 1)), X]
+        return np.c_[X, np.ones((X.shape[0], 1))]
 
     def _fit(self, X, y):
         X, y = self._check_input(X, y)
@@ -35,16 +35,18 @@ class LinearRegression(BaseEstimator):
             self.parameters = self.closed_form(X_intercept, y, self.parameters)
         elif self.solver == "sgd":
             sgd = SGD(
-                self.gradient_fn, 
-                self.parameters, 
-                1e-1, 
-                self.loss_fn, 
-                batch_size=y.size, 
-                max_iter=self.max_iter, 
+                self.gradient_fn,
+                self.parameters,
+                1e-1,
+                self.loss_fn,
+                batch_size=y.size,
+                max_iter=self.max_iter,
                 tolerance=self.tolerance
                 )
             self.parameters = sgd.optimize(X_intercept, y)
             self.hisory = sgd.history
+        else:
+            raise ValueError(f"No such solver: {self.solver}!")
         self.fit_required = False
 
     def _predict(self, X):

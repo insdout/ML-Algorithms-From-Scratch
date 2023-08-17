@@ -9,6 +9,7 @@ class BaseEstimator:
     def fit(self, X, y=None):
         X, y = self._check_input(X, y)
         self._fit(X, y)
+        return self
 
     def predict(self, X):
         X = self._check_x(X)
