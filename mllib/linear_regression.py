@@ -17,7 +17,7 @@ class LinearRegression(BaseEstimator):
 
     def gradient_fn(self, X_intercept, y, parameters):
         n = y.shape[0]
-        return (1/(2*n))*(X_intercept.T @ (X_intercept @ parameters - y) + self.alpha * np.concatenate(([0], parameters[1:])))
+        return (1/(n))*(X_intercept.T @ (X_intercept @ parameters - y) + self.alpha * np.concatenate(([0], parameters[1:])))
 
     def closed_form(self, X_intercept, y, parameters):
         I = np.eye(parameters.shape[0])
