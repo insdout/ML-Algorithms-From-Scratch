@@ -13,11 +13,12 @@ def entropy_inpurity(y):
         y = np.array(y)
     probabilities = np.bincount(y)/y.shape[0]
     return np.sum(-probabilities * np.log2(probabilities, where=(probabilities > 0)))
-    
+
 
 def mse_impurity(y):
     y_mean = np.mean(y)
     return np.mean((y - y_mean)**2)
+
 
 def mae_impurity(y):
     y_mean = np.median(y)
@@ -31,7 +32,7 @@ class Node:
         self.left = left
         self.right = right
         self.value = value
-    
+
     def is_leaf(self):
         return self.value is not None
 
@@ -55,14 +56,13 @@ class DecisionTree:
         if self.regression:
             if self.criterion not in {"mae", "mse"}:
                 raise ValueError("For regression criterion should be mae or mse.")
-    
+
     def _check_X(self, X):
         if not isinstance(X, np.ndarray):
             X = np.array(X, dtype=np.float32)
         if X.size == 0:
             raise ValueError("The array X must be non-empty")
         return X
-        
 
     def _check_inputs(self, X, y):
         X = self._check_X(X)
@@ -73,8 +73,8 @@ class DecisionTree:
             y = np.array(y)
         if y.size == 0:
             raise ValueError("The array y must be non-empty")
-        return X, y 
-    
+        return X, y
+
     def _get_feature_thresholds(self, X, feature):
         unique_values = np.unique(X[:, feature])
         n_unique = len(unique_values)
@@ -87,15 +87,15 @@ class DecisionTree:
         left_idx = (X[:, feature] <= threshold)
         right_idx = (X[:, feature] > threshold)
         return left_idx, right_idx
-    
+
     def _split(self, X, y, feature, threshold):
-        left_idx, right_idx = self._split_mask(X, feature, threshold) 
+        left_idx, right_idx = self._split_mask(X, feature, threshold)
         y_left = y[left_idx]
         y_right = y[right_idx]
         return y_left, y_right
-    
+
     def _leafs_impurity(self, X, y, feature, threshold):
-        left_idx, right_idx = self._split_mask(X, feature, threshold) 
+        left_idx, right_idx = self._split_mask(X, feature, threshold)
         y_left = y[left_idx]
         y_right = y[right_idx]
         n_left = len(y_left)
@@ -143,7 +143,7 @@ class DecisionTree:
         if (self.max_depth and (depth >= self.max_depth)) or (n_samples < self.min_samples_split) or (unique_classes == 1):
             return True
         return False
-    
+
     def _build_tree(self, X, y, depth):
         if self._is_finished(y, depth):
             if self.regression:
@@ -156,23 +156,22 @@ class DecisionTree:
             else:
                 prediction = np.bincount(y, minlength=self.n_classes_)/y.shape[0]
             return Node(value=prediction)
-        
+
         feature_idx, threshold = self._best_split(X, y)
         left_idx, right_idx = self._split_mask(X, feature_idx, threshold)
         left_child = self._build_tree(X[left_idx, :], y[left_idx], depth + 1)
         right_child = self._build_tree(X[right_idx, :], y[right_idx], depth + 1)
         return Node(feature_idx=feature_idx, threshold=threshold, left=left_child, right=right_child)
-    
+
     def _traverse_tree(self, x, node):
         if node.is_leaf():
             return node.value
-        
         feature_idx = node.feature_idx
         threshold = node.threshold
         if x[feature_idx] <= threshold:
             return self._traverse_tree(x, node.left)
         return self._traverse_tree(x, node.right)
-    
+
     def fit(self, X, y):
         X, y = self._check_inputs(X, y)
         self.n_classes_ = len(np.unique(y))
@@ -180,21 +179,19 @@ class DecisionTree:
 
     def predict(self, X):
         raise NotImplementedError("Subclasses must implement predict method.")
-    
-        
+
+
 def print_tree(tree):
     def height(root):
         if root is None:
             return 0
         return max(height(root.left), height(root.right))+1
-    
-    
+
     def getcol(h):
         if h == 1:
             return 1
         return getcol(h-1) + getcol(h-1) + 1
-    
-    
+
     def printTree(M, root, col, row, height, type):
         if root is None:
             return
@@ -207,8 +204,6 @@ def print_tree(tree):
                 M[row][col] = f"X[{root.feature_idx}]> {root.threshold :02.1f}"
         printTree(M, root.left, col-pow(2, height-2), row+1, height-1, "left")
         printTree(M, root.right, col+pow(2, height-2), row+1, height-1, "right")
-        
-        
 
     h = height(tree.root)
     col = getcol(h)
@@ -221,8 +216,6 @@ def print_tree(tree):
             else:
                 print(j, end="   ")
         print("")
-            
- 
 
 
 class DecisionTreeClassifier(DecisionTree):
@@ -232,13 +225,12 @@ class DecisionTreeClassifier(DecisionTree):
     def predict(self, X):
         probabilities = self.predict_proba(X)
         return np.argmax(probabilities, axis=1)
-    
+
     def predict_proba(self, X):
         X = self._check_X(X)
         predictions = [self._traverse_tree(x, self.root) for x in X]
         return np.array(predictions)
 
-    
 
 class DecisionTreeRegressor(DecisionTree):
     def __init__(self, criterion="mse", max_depth=3, max_features=None, min_samples_split=2):
@@ -250,7 +242,6 @@ class DecisionTreeRegressor(DecisionTree):
         return np.array(predictions)
 
 
-
 if __name__ == "__main__":
     from sklearn.datasets import make_classification, make_regression
     X_train, y_train = make_classification(
@@ -260,7 +251,7 @@ if __name__ == "__main__":
     tree.fit(X_train, y_train)
     print("DT Classifier fitted!")
     tree.predict(X_train)
-    #draw_decision_tree(tree.tree)
+    # draw_decision_tree(tree.tree)
     print_tree(tree)
 
     X_train, y_train = make_regression(
@@ -269,7 +260,7 @@ if __name__ == "__main__":
     tree.fit(X_train, y_train)
     print("DT Regressor fitted!")
     tree.predict(X_train)
-    #draw_decision_tree(tree.tree)
+    # draw_decision_tree(tree.tree)
     print_tree(tree)
 
     from sklearn.datasets import make_classification, make_regression
