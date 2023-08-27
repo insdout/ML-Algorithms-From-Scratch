@@ -176,6 +176,7 @@ class DecisionTree:
         X, y = self._check_inputs(X, y)
         self.n_classes_ = len(np.unique(y))
         self.root = self._build_tree(X, y, depth=0)
+        return self
 
     def predict(self, X):
         raise NotImplementedError("Subclasses must implement predict method.")
