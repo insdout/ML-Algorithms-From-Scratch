@@ -120,6 +120,7 @@ class DecisionTree:
             max_features = min(self.max_features, n_features)
         else:
             raise ValueError("max_features could be: None, 'sqrt', 'log2' or int.")
+        max_features = max(max_features, 1)
 
         features_idx = np.random.choice(n_features, max_features, replace=False)
 

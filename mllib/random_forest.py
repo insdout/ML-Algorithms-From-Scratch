@@ -13,16 +13,22 @@ class RandomForest(BaseEstimator):
         self.min_samples_split = min_samples_split
         self.regression = regression
         self.estimators = []
-     
+
+    def _bootsrap(self, X, y):
+        n_samples = y.shape[0]
+        indices = np.random.choice(y.shape[0], n_samples, replace=True)
+        return X[indices, :], y[indices]
+
     def _fit(self, X, y):
         for estimator in self.estimators:
-            estimator.fit(X, y)
+            X_b, y_b = self._bootsrap(X, y)
+            estimator.fit(X_b, y_b)
         self.fit_required = False
 
     def predict(self, X):
         predictions = self._predict(X)
         return np.array(predictions)
-    
+
 
 class RandomForestClassifier(RandomForest):
     def __init__(self, n_estimators=100, criterion="gini", max_depth=None, max_features="auto", min_samples_split=2):
@@ -53,7 +59,7 @@ class RandomForestClassifier(RandomForest):
     
 
 class RandomForestRegressor(RandomForest):
-    def __init__(self, n_estimators=100, criterion="mse", max_depth=None, max_features="auto", min_samples_split=2):
+    def __init__(self, n_estimators=100, criterion="mse", max_depth=None, max_features="auto", min_samples_split=5):
         super().__init__(n_estimators, criterion, max_depth, max_features, min_samples_split, regression=True)
 
         if self.max_features == "auto":
