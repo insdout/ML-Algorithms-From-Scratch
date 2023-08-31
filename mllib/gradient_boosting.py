@@ -39,7 +39,6 @@ class GradientBoostingRegressor(BaseEstimator):
             max_depth=2,
             max_features="div3",
             min_samples_split=2,
-            weighted_estimators=True
     ):
         self.loss = loss
         self.criterion = criterion
@@ -48,7 +47,6 @@ class GradientBoostingRegressor(BaseEstimator):
         self.min_samplees_split = min_samples_split
         self.n_estimators = n_estimators
         self.learning_rate = learning_rate
-        self.weighted_estimators = weighted_estimators
         self.estimator_weights = []
         self.estimators = [
             DecisionTreeRegressor(
@@ -70,9 +68,7 @@ class GradientBoostingRegressor(BaseEstimator):
             residuals = self.loss.negative_gradient(y, y_pred)
             estimator.fit(X, residuals)
             predictions = estimator.predict(X)
-            w = 1.0
-            if self.weighted_estimators:
-                w = self._compute_estimator_weights(y, predictions, residuals)
+            w = 1.0 # For future: can optimize w
             self.estimator_weights.append(w)
             y_pred += self.learning_rate * w * predictions
             self.fit_required = False
@@ -83,10 +79,6 @@ class GradientBoostingRegressor(BaseEstimator):
             prediction += self.learning_rate * w * estimator.predict(X)
         return prediction
 
-    def _compute_estimator_weights(self, y, predictions, residuals):
-        nominator = np.sum(self.loss.gradient(y, predictions))
-        denominator = np.sum(self.loss.hessian(y, predictions))
-        return nominator/denominator
 
 
 if __name__ == "__main__":
@@ -108,8 +100,7 @@ if __name__ == "__main__":
 
     gb = GradientBoostingRegressor(
         n_estimators=500,
-        learning_rate=0.01,
-        weighted_estimators=False
+        learning_rate=0.01
     )
 
     rf = RandomForestRegressor()
