@@ -50,17 +50,10 @@ Happy learning!
 ---
 
 TODO: Algorithms to add.
-- ~~Add Logistic Regression~~
-- ~~Add Gradient Boosting~~
-- ~~Add Random Forest~~
 - Add EM Algorithm
 - Add Naive Bayess
-- ~~Add KNN~~
 - Add SVM
 - Add Spectral Clustering
-- ~~Add RMSProp~~
-- ~~Add Adam~~
-- ~~Add KNeighbors~~
 - Add SVD
 - Add QR
 - Add matrix inverse via SVD
