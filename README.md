@@ -1,76 +1,51 @@
-# ML Algorithms From Scratch
+# Machine Learning Algorithms from Scratch
 
-This repository contains implementations of various machine learning algorithms from scratch using Python. The implementations are located in the `mllib` directory, and example tutorials can be found in the `tutorials` directory.
+This repository contains implementations of various machine learning algorithms from scratch. Each algorithm is presented in a Jupyter Notebook along with corresponding Python modules.
 
-## Table of Contents
+## Algorithms Included
 
-- [Introduction](#introduction)
-- [Repository Structure](#repository-structure)
-- [Algorithms](#algorithms)
-- [Tutorials](#tutorials)
-- [Contributing](#contributing)
-- [License](#license)
+- [Bias-Variance Tradeoff](Bias_Variance_Tradeoff.ipynb) ([Python Code](mllib/bias_variance.py))
+- [Decision Trees](Decision_Trees.ipynb) ([Python Code](mllib/decision_tree.py))
+- [Gradient Boosting](Gradient_Boosting.ipynb) ([Python Code](mllib/gradient_boosting.py))
+- [K-Means Clustering](KMeans.ipynb) ([Python Code](mllib/kmeans.py))
+- [K-Nearest Neighbors (KNN)](KNN.ipynb) ([Python Code](mllib/knn.py))
+- [Linear Regression](Linear_Regression.ipynb) ([Python Code](mllib/linear_regression.py))
+- [Logistic Regression](Logistic_Regression.ipynb) ([Python Code](mllib/logistic_regression.py))
+- [Optimizers](Optimizers.ipynb) ([Python Code](mllib/optimizers.py))
 
-## Introduction
+## mllib Module
 
-Implementing machine learning algorithms from scratch can be a great way to deepen your understanding of the underlying concepts and algorithms. This repository provides a collection of machine learning algorithms implemented in Python without relying on external libraries.
+The `mllib` module contains the Python implementations of the algorithms. Here's an overview of the modules:
 
-By studying and experimenting with these implementations, you can gain insights into the inner workings of popular machine learning algorithms and customize them to suit your specific needs.
+- [adam.py](mllib/adam.py): Implementation of the Adam optimizer.
+- [base.py](mllib/base.py): Base classes for machine learning algorithms.
+- [decision_tree.py](mllib/decision_tree.py): Decision tree algorithm.
+- [gmm.py](mllib/gmm.py): Gaussian Mixture Model implementation.
+- [gradient_boosting.py](mllib/gradient_boosting.py): Gradient boosting algorithm.
+- [kmeans.py](mllib/kmeans.py): K-Means clustering algorithm.
+- [knn.py](mllib/knn.py): K-Nearest Neighbors algorithm.
+- [linear_regression.py](mllib/linear_regression.py): Linear regression algorithm.
+- [logistic_regression.py](mllib/logistic_regression.py): Logistic regression algorithm.
+- [optimizers.py](mllib/optimizers.py): Various optimization algorithms.
+- [random_forest.py](mllib/random_forest.py): Random Forest algorithm.
+- [rmsprop.py](mllib/rmsprop.py): RMSprop optimizer.
+- [utils.py](mllib/utils.py): Utility functions.
 
-## Repository Structure
+## Usage
 
-The repository has the following structure:
-```
-├── mllib
-|   ├── __init__.py
-│   ├── base.py
-│   ├── decision_tree.py
-│   ├── linear_regression.py
-│   ├── logistic_regression.py
-│   └── sgd.py
-├── README.md
-└── tutorials
-    ├── Decision_Trees.ipynb
-    ├── Gradient_Descend_Adam_RMSProp.ipynb
-    ├── Linear_Regression.ipynb
-    └── SVD QR Spectral Decomposition.ipynb
-```
+Each algorithm is presented in a Jupyter Notebook for easy exploration and understanding. The corresponding Python modules in the `mllib` directory provide the implementation details.
 
-The `mllib` directory contains the implementations of machine learning algorithms. Each algorithm is implemented in a separate Python file.
-
-The `tutorials` directory contains example notebooks demonstrating the usage of the implemented algorithms. These tutorials provide step-by-step explanations and code examples to help you understand and apply the algorithms in practice.
-
-## Algorithms
-
-Here are some of the machine learning algorithms implemented in this repository:
-
-- `base.py`: Contains the base classes and utilities used by other algorithms.
-- `decision_tree.py`: Implements the decision tree algorithm for classification and regression tasks.
-- `random_forest.py`: Contains the implementation of Random Forest.
-- `linear_regression.py`: Provides implementations of linear regression.
-- `logistic_regression.py` : Is implementation of logistic regression models.
-- `sgd.py`: Implements the stochastic gradient descent optimization algorithm.
-
-Feel free to explore the implementations, experiment with different algorithms, and customize them to meet your specific requirements.
-
-## Tutorials
-
-The `tutorials` directory contains Jupyter notebooks that demonstrate the usage of the implemented algorithms. Here are some of the tutorials available:
-
-- `Decision_Trees.ipynb`: Illustrates the decision tree algorithm and its application in classification tasks.
-- `Gradient_Descend_Adam_RMSProp.ipynb`: Explains gradient descent optimization techniques like Adam and RMSProp.
-- `Linear_Regression.ipynb`: Demonstrates the linear regression algorithm for predicting continuous variables.
-- `SVD QR Spectral Decomposition.ipynb`: Covers singular value decomposition, QR decomposition, and spectral decomposition.
-
-Feel free to explore the tutorials and run the code to gain a better understanding of how the algorithms work and how to use them in practice.
-
-## Contributing
-
-Contributions to this repository are welcome! If you have any suggestions, improvements, or bug fixes, please feel free to open an issue or submit a pull request. Let's collaborate to make these machine learning implementations even better.
+Feel free to explore, learn, and use these implementations as a learning resource or as a reference for building your own machine learning models.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This repository is licensed under the [MIT License](LICENSE).
+
+For detailed information about each algorithm, refer to the respective Jupyter Notebook and Python modules.
+
+Feel free to contribute or open issues for improvements or additional algorithms.
+
+Happy learning!
 
 ---
 
