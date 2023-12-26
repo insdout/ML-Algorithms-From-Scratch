@@ -20,7 +20,7 @@ The `mllib` module contains the Python implementations of the algorithms. Here's
 - [adam.py](mllib/adam.py): Implementation of the Adam optimizer.
 - [base.py](mllib/base.py): Base classes for machine learning algorithms.
 - [decision_tree.py](mllib/decision_tree.py): Decision tree algorithm.
-- [gmm.py](mllib/gmm.py): Gaussian Mixture Model implementation.
+<!--- - [gmm.py](mllib/gmm.py): Gaussian Mixture Model implementation. -->
 - [gradient_boosting.py](mllib/gradient_boosting.py): Gradient boosting algorithm.
 - [kmeans.py](mllib/kmeans.py): K-Means clustering algorithm.
 - [knn.py](mllib/knn.py): K-Nearest Neighbors algorithm.
