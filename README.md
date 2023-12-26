@@ -4,7 +4,7 @@ This repository contains implementations of various machine learning algorithms 
 
 ## Algorithms Included
 
-- [Bias-Variance Tradeoff](Bias_Variance_Tradeoff.ipynb) ([Python Code](mllib/bias_variance.py))
+- [Bias-Variance Tradeoff](Bias_Variance_Tradeoff.ipynb)
 - [Decision Trees](Decision_Trees.ipynb) ([Python Code](mllib/decision_tree.py))
 - [Gradient Boosting](Gradient_Boosting.ipynb) ([Python Code](mllib/gradient_boosting.py))
 - [K-Means Clustering](KMeans.ipynb) ([Python Code](mllib/kmeans.py))
