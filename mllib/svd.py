@@ -104,4 +104,3 @@ if __name__ == "__main__":
     print(-V)
     print()
     print(V2)
-

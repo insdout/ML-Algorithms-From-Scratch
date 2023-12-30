@@ -1,6 +1,5 @@
 import numpy as np
 from copy import deepcopy
-from svd import svd
 
 
 def qr_decomposition(M: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
