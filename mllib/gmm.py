@@ -6,6 +6,12 @@ class GMM(BaseEstimator):
     def __init__(self, n):
         self.n = n
 
+    def e_step(self):
+        pass
+
+    def m_step(self):
+        pass
+
     def _fit(self):
         pass
 
