@@ -35,17 +35,12 @@ The `mllib` module contains the Python implementations of the algorithms. Here's
 
 Each algorithm is presented in a Jupyter Notebook for easy exploration and understanding. The corresponding Python modules in the `mllib` directory provide the implementation details.
 
-Feel free to explore, learn, and use these implementations as a learning resource or as a reference for building your own machine learning models.
 
 ## License
 
 This repository is licensed under the [MIT License](LICENSE).
 
 For detailed information about each algorithm, refer to the respective Jupyter Notebook and Python modules.
-
-Feel free to contribute or open issues for improvements or additional algorithms.
-
-Happy learning!
 
 ---
 
