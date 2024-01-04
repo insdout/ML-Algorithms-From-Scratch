@@ -12,6 +12,7 @@ This repository contains implementations of various machine learning algorithms 
 - [Linear Regression](Linear_Regression.ipynb) ([Python Code](mllib/linear_regression.py))
 - [Logistic Regression](Logistic_Regression.ipynb) ([Python Code](mllib/logistic_regression.py))
 - [Optimizers](Optimizers.ipynb) ([Python Code](mllib/optimizers.py))
+- [Gaussian Mixture Model](Gaussian_Mixture_Model.ipynb) ([Python Code](mllib/gmm.py))
 
 ## mllib Module
 
@@ -20,7 +21,7 @@ The `mllib` module contains the Python implementations of the algorithms. Here's
 - [adam.py](mllib/adam.py): Implementation of the Adam optimizer.
 - [base.py](mllib/base.py): Base classes for machine learning algorithms.
 - [decision_tree.py](mllib/decision_tree.py): Decision tree algorithm.
-<!--- - [gmm.py](mllib/gmm.py): Gaussian Mixture Model implementation. -->
+- [gmm.py](mllib/gmm.py): Gaussian Mixture Model implementation. 
 - [gradient_boosting.py](mllib/gradient_boosting.py): Gradient boosting algorithm.
 - [kmeans.py](mllib/kmeans.py): K-Means clustering algorithm.
 - [knn.py](mllib/knn.py): K-Nearest Neighbors algorithm.
@@ -49,16 +50,13 @@ Happy learning!
 ---
 
 TODO: Algorithms to add.
-- Add EM Algorithm
 - Add Naive Bayess
 - Add SVM
 - Add Spectral Clustering
 - Add SVD
 - Add QR
 - Add matrix inverse via SVD
-- Add eigendecomposition
 - Add PCA 
-- Add AdaBoost 
 
 
 ---

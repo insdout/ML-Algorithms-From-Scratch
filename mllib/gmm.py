@@ -21,14 +21,14 @@ class GMM(BaseEstimator):
     - means (list): List of means for each Gaussian component.
     - sigmas (list): List of covariance matrices for each Gaussian component.
     - likelihood (list): List of likelihood values during training.
-    - pi_c (numpy.ndarray): Prior probabilities for each Gaussian component.
+    - alpha_c (numpy.ndarray): Prior probabilities for each Gaussian component.
     - gamma (numpy.ndarray): Responsibilities matrix.
     - fit_required (bool): Flag indicating whether the model needs to be fitted.
     """
 
     y_required = False
 
-    def __init__(self, n_components: int, max_iter: int = 1000, tolerance: float = 1e-8) -> None:
+    def __init__(self, n_components: int, max_iter: int = 1000, tolerance: float = 1e-6) -> None:
         """
         Initialize the Gaussian Mixture Model.
 
@@ -43,7 +43,7 @@ class GMM(BaseEstimator):
         self.means = []
         self.sigmas = []
         self.likelihood = []
-        self.pi_c = np.ones(n_components)/n_components
+        self.alpha_c = np.ones(n_components)/n_components
 
     @staticmethod
     def pdf_multivariate(x: np.ndarray, mu: np.ndarray, sigma: np.ndarray) -> np.ndarray:
@@ -78,7 +78,7 @@ class GMM(BaseEstimator):
         self.means = np.array([X[ind] for ind in np.random.choice(range(X.shape[0]), self.n_components)])
         self.sigmas = np.stack([np.cov(X.T) for _ in range(self.n_components)])
         self.likelihood = []
-        self.pi_c = np.ones(n_components)/n_components
+        self.alpha_c = np.ones(n_components)/n_components
 
     def _get_likelihoods(self, x: np.ndarray) -> np.ndarray:
         """
@@ -104,7 +104,7 @@ class GMM(BaseEstimator):
         """
         likelihoods = self._get_likelihoods(x)
         self.likelihood.append(likelihoods.sum())
-        weighted_likelihoods = likelihoods*self.pi_c
+        weighted_likelihoods = likelihoods*self.alpha_c
         self.gamma = weighted_likelihoods/np.sum(weighted_likelihoods, axis=1)[:, np.newaxis]
 
     def _M_step(self, x: np.ndarray) -> None:
@@ -118,8 +118,8 @@ class GMM(BaseEstimator):
         for c in range(self.n_components):
             self.means[c] = np.sum(x*self.gamma[:, c, np.newaxis], axis=0)/gamma_summs[c]
             self.sigmas[c] = ((x - self.means[c]).T @ ((x - self.means[c])*self.gamma[:, c, np.newaxis]))/gamma_summs[c]
-        pi_c = gamma_summs/x.shape[0]
-        self.pi_c = pi_c
+        alpha_c = gamma_summs/x.shape[0]
+        self.alpha_c = alpha_c
 
     def _is_converged(self) -> bool:
         """
@@ -164,7 +164,31 @@ class GMM(BaseEstimator):
         likelihoods = self._get_likelihoods(X)
         preds = np.argmax(likelihoods, axis=1)
         return preds
-    
+
+    def plot(self, X: np.ndarray) -> None:
+        """
+        Plot the Gaussian Mixture Model on a 3D surface.
+
+        Parameters:
+        - X (np.ndarray): Input data for plotting.
+
+        Returns:
+        None
+        """
+        _, n_features = X.shape
+        grid_steps = 40
+        min_lims = 1.5*np.min(X, axis=0)
+        max_lims = 1.5*np.max(X, axis=0)
+        xs = np.linspace(min_lims[0], max_lims[0], grid_steps)
+        ys = np.linspace(min_lims[1], max_lims[1], grid_steps)
+        xv, yv = np.meshgrid(xs, ys)
+        x_in = np.c_[xv.ravel(), yv.ravel()]
+        zs = np.sum(self._get_likelihoods(x_in), axis=1).reshape(len(xs), len(ys))
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(xv, yv, zs, cmap='viridis', alpha=1, edgecolors='black', linewidth=0.5)
+        plt.savefig('gmm.png')
+
     def _fit_meshgrid(self, X: np.ndarray) -> None:
         """
         Fit the Gaussian Mixture Model to a 2D meshgrid for visualization.
@@ -209,7 +233,7 @@ class GMM(BaseEstimator):
 
         def update(frame):
             ax.clear()
-            ax.plot_surface(xv, yv, zs[frame], cmap='viridis', alpha=0.9, antialiased=True)
+            ax.plot_surface(xv, yv, zs[frame], cmap='viridis', alpha=1, edgecolors='black', linewidth=0.5)
             ax.set_title(f'Iteration {frame}')
             return []
 
@@ -221,21 +245,21 @@ if __name__ == "__main__":
     import numpy as np
 
     # Set random seed for reproducibility
-    np.random.seed(42)
+    #np.random.seed(42)
 
     # Mean and covariance matrix for the first Gaussian
     mean1 = np.array([-2, 2])
-    cov1 = np.array([[1, 0.0], [0.0, 1]])
+    cov1 = np.array([[1.0, 0.0], [0.0, 1.0]])
 
     # Mean and covariance matrix for the second Gaussian
     mean2 = np.array([2, 2])
-    cov2 = np.array([[1, 0], [0, 1]])
+    cov2 = np.array([[1.5, 0], [0, 1.5]])
 
     mean3 = np.array([2, -2])
-    cov3 = np.array([[1, 0], [0, 1]])
+    cov3 = np.array([[2, 0], [0, 2]])
 
     # Number of samples
-    num_samples = 100
+    num_samples = 50
 
     # Generate samples from the first Gaussian
     samples1 = np.random.multivariate_normal(mean1, cov1, num_samples)
@@ -248,11 +272,12 @@ if __name__ == "__main__":
     # Stack the samples into a single array
     x = np.vstack([samples1, samples2, samples3])
 
-
     gmm = GMM(3)
     print('X shape', x.shape)
     print(gmm._fit_meshgrid(x))
+    gmm = GMM(3)
     gmm.fit(x)
+    gmm.plot(x)
     print('+++++++++++++')
     print(gmm.means)
     print('+++++++++++++')
