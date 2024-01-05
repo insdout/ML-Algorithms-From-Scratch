@@ -12,7 +12,7 @@ def svd_decomposition(M: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 def power_iteration(M: np.ndarray, n_iter: int = 1000, tolerance: float = 1e-5) -> tuple[float, np.ndarray]:
     n, m = M.shape
-    assert n == m , 'Matrix should be square!'
+    assert n == m, 'Matrix should be square!'
     v = np.random.rand(m)
     v = v/np.sqrt(v.T @ v)
     eps = float('inf')
@@ -43,7 +43,7 @@ def eigen_decomposition(M: np.ndarray, solver: str = 'power', tolerance: float =
     return eigenvalues, np.array(eigenvectors2).T
 
 
-def find_eigenvector_safe(M, eigenvalue):
+def find_eigenvector_safe(M: np.ndarray, eigenvalue: float) -> np.ndarray:
     A = deepcopy(M)
     n = A.shape[0]
     I = np.eye(n)
