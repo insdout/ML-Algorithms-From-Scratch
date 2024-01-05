@@ -2,8 +2,8 @@
 
 This repository contains implementations of various machine learning algorithms from scratch. Each algorithm is presented in a Jupyter Notebook along with corresponding Python modules.
 <div align="center">
-  <img src="assets/optimization_animation_valleys.gif" width="300">
-  <img src="assets/gmm_animation.gif" width="300">
+  <img src="assets/optimization_animation_valleys.gif" width="400">
+  <img src="assets/gmm_animation.gif" width="400">
 </div>
 
 ## Algorithms Included
