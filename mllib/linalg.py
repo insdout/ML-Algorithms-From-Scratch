@@ -2,6 +2,10 @@ import numpy as np
 from copy import deepcopy
 
 
+def lu_decomposition(M: np.ndarray) -> tuple[np.ndarray]:
+    pass
+
+
 def qr_decomposition(M: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     pass
 
