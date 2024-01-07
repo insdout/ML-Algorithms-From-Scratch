@@ -53,7 +53,6 @@ TODO: Algorithms to add.
 - Add SVM
 - Add Spectral Clustering
 - Add SVD
-- Add QR
 - Add matrix inverse via SVD
 - Add PCA 
 
