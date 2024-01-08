@@ -33,6 +33,7 @@ The `mllib` module contains the Python implementations of the algorithms. Here's
 - [logistic_regression.py](mllib/logistic_regression.py): Logistic regression algorithm.
 - [optimizers.py](mllib/optimizers.py): Various optimization algorithms.
 - [random_forest.py](mllib/random_forest.py): Random Forest algorithm.
+- [qr.py](mllib/qr.py): QR decomposition algorithm.
 - [utils.py](mllib/utils.py): Utility functions.
 
 ## Usage
