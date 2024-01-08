@@ -53,7 +53,6 @@ TODO: Algorithms to add.
 - Add Naive Bayess
 - Add SVM
 - Add Spectral Clustering
-- Add SVD
 - Add matrix inverse via SVD
 - Add PCA 
 

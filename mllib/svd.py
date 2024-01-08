@@ -22,7 +22,6 @@ def power_iteration(A: np.ndarray, tolerance: float = 1e-15, max_iter: int = 100
         w = M @ v
         w /= np.linalg.norm(w)
         delta = np.linalg.norm(w - v)
-        print(i, delta)
         v = w
         i += 1
         if abs(delta) < tolerance:
