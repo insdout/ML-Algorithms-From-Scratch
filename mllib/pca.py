@@ -1,38 +1,100 @@
 import numpy as np
-from numpy.linalg import eig
-from scipy.linalg import svd
-from base import BaseEstimator
 
 
 class PCA:
+    """
+    Principal Component Analysis (PCA) class.
 
-    def __init__(self, num_components):
-        self.num_components = num_components
+    Parameters:
+    - n_components (int): Number of principal components to retain.
+
+    Attributes:
+    - n_components (int): Number of principal components to retain.
+    - components (ndarray or None): Principal components obtained after fitting.
+    - mean (ndarray or None): Mean of the input data used for standardization.
+    """
+
+    def __init__(self, n_components: int):
+        """
+        Initialize PCA with the specified number of components.
+
+        Parameters:
+        - n_components (int): Number of principal components to retain.
+        """
+        self.n_components = n_components
         self.components = None
         self.mean = None
-    
-    def _standardize(self, X):
+
+    def _standardize(self, X: np.ndarray) -> np.ndarray:
+        """
+        Standardize the input data.
+
+        Parameters:
+        - X (ndarray): Input data.
+
+        Returns:
+        - ndarray: Standardized data.
+        """
         return X - self.mean
 
-    def fit(self, X):
+    def _swap_signs(self, M: np.ndarray) -> np.ndarray:
+        """
+        Swap signs of the columns of the matrix based on the column with maximum absolute value.
+
+        Parameters:
+        - M (ndarray): Input matrix.
+
+        Returns:
+        - ndarray: Matrix with signs swapped.
+        """
+        max_abs_cols = np.argmax(np.abs(M), axis=0)
+        signs = np.sign(M[max_abs_cols, range(M.shape[1])])
+        M *= signs
+        return M
+
+    def fit(self, X: np.ndarray):
+        """
+        Fit the PCA model to the input data.
+
+        Parameters:
+        - X (ndarray): Input data.
+        """
         self.mean = np.mean(X, axis=0)
         X_standardized = self._standardize(X)
-        
-        covariance_matrix = X_standardized.T @ X_standardized /(X.shape[0]-1)
 
-        eigenvalues, eigenvectors = np.linalg.eig(covariance_matrix)
+        S = X_standardized.T @ X_standardized / (X.shape[0] - 1)
+
+        eigenvalues, eigenvectors = np.linalg.eig(S)
         # Sort eigenvectors by eigenvalues in descending order
         sorted_idxs = np.argsort(eigenvalues)[::-1]
-        self.components = eigenvectors[:, sorted_idxs[:self.num_components]]
+        self.components = self._swap_signs(eigenvectors[:, sorted_idxs[:self.n_components]])
 
-    def transform(self, X):
+    def transform(self, X: np.ndarray) -> np.ndarray:
+        """
+        Transform the input data using the fitted PCA model.
+
+        Parameters:
+        - X (ndarray): Input data.
+
+        Returns:
+        - ndarray: Transformed data.
+        """
         if self.components is None:
             raise Exception("Call fit method first!")
 
         X_standardized = self._standardize(X)
         return np.dot(X_standardized, self.components)
 
-    def fit_transform(self, X):
+    def fit_transform(self, X: np.ndarray) -> np.ndarray:
+        """
+        Fit the PCA model to the input data and transform it.
+
+        Parameters:
+        - X (ndarray): Input data.
+
+        Returns:
+        - ndarray: Transformed data.
+        """
         self.fit(X)
         return self.transform(X)
 
@@ -53,8 +115,9 @@ if __name__ == '__main__':
         [10.5, 11.7, 12.9, 13.6, 14.5]
     ]).astype(float)
 
-    # Using sklearn PCA for comparison
-    sk_pca = PCA(num_components=2)
-    my_result = sk_pca.fit_transform(X)
+    # Msing sklearn PCA for comparison
+    pca = PCA(n_components=2)
+    my_result = pca.fit_transform(X)
+    print(my_result @ pca.components.T + pca.mean)
 
 

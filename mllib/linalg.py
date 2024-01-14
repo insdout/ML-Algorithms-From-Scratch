@@ -6,14 +6,6 @@ def lu_decomposition(M: np.ndarray) -> tuple[np.ndarray]:
     pass
 
 
-def qr_decomposition(M: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    pass
-
-
-def svd_decomposition(M: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    pass
-
-
 def power_iteration(M: np.ndarray, n_iter: int = 1000, tolerance: float = 1e-5) -> tuple[float, np.ndarray]:
     n, m = M.shape
     assert n == m, 'Matrix should be square!'
