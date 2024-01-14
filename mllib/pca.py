@@ -24,6 +24,7 @@ class PCA:
         self.n_components = n_components
         self.components = None
         self.mean = None
+        self.explained_variance = 0
 
     def _standardize(self, X: np.ndarray) -> np.ndarray:
         """
@@ -65,9 +66,12 @@ class PCA:
         S = X_standardized.T @ X_standardized / (X.shape[0] - 1)
 
         eigenvalues, eigenvectors = np.linalg.eig(S)
+
         # Sort eigenvectors by eigenvalues in descending order
         sorted_idxs = np.argsort(eigenvalues)[::-1]
         self.components = self._swap_signs(eigenvectors[:, sorted_idxs[:self.n_components]])
+        total_variance = np.sum(eigenvalues)
+        self.explained_variance = np.sum(eigenvalues[sorted_idxs[:self.n_components]])/total_variance
 
     def transform(self, X: np.ndarray) -> np.ndarray:
         """
