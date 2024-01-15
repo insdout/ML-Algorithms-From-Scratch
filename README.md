@@ -17,6 +17,7 @@ This repository contains implementations of various machine learning algorithms 
 - [Logistic Regression](Logistic_Regression.ipynb) ([Python Code](mllib/logistic_regression.py))
 - [Optimizers](Optimizers.ipynb) ([Python Code](mllib/optimizers.py))
 - [Gaussian Mixture Model](Gaussian_Mixture_Model.ipynb) ([Python Code](mllib/gmm.py))
+- [PCA](PCA.ipynb) ([Python Code](mllib/pca.py))
 
 ## mllib Module
 
@@ -53,7 +54,6 @@ TODO: Algorithms to add.
 - Add Naive Bayess
 - Add SVM
 - Add Spectral Clustering
-- Add PCA 
 
 
 ---
