@@ -35,6 +35,8 @@ The `mllib` module contains the Python implementations of the algorithms. Here's
 - [optimizers.py](mllib/optimizers.py): Various optimization algorithms.
 - [random_forest.py](mllib/random_forest.py): Random Forest algorithm.
 - [qr.py](mllib/qr.py): QR decomposition algorithm.
+- [pca.py](mllib/pca.py): PCA algorithm.
+- [naive_bayes.py](mllib/naive_bayes.py): Naive Bayes algorithm.
 - [utils.py](mllib/utils.py): Utility functions.
 
 ## Usage
@@ -51,7 +53,6 @@ For detailed information about each algorithm, refer to the respective Jupyter N
 ---
 
 TODO: Algorithms to add.
-- Add Naive Bayess
 - Add SVM
 - Add Spectral Clustering
 

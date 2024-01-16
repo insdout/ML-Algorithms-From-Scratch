@@ -87,7 +87,6 @@ class MultinomialNB(BaseEstimator):
         return original_labels
 
 
-
 if __name__ == '__main__':
     import pandas as pd
     from sklearn.metrics import classification_report
