@@ -18,6 +18,7 @@ This repository contains implementations of various machine learning algorithms 
 - [Optimizers](Optimizers.ipynb) ([Python Code](mllib/optimizers.py))
 - [Gaussian Mixture Model](Gaussian_Mixture_Model.ipynb) ([Python Code](mllib/gmm.py))
 - [PCA](PCA.ipynb) ([Python Code](mllib/pca.py))
+- [ROC AUC](ROC_AUC.ipynb)
 
 ## mllib Module
 
@@ -36,6 +37,7 @@ The `mllib` module contains the Python implementations of the algorithms. Here's
 - [random_forest.py](mllib/random_forest.py): Random Forest algorithm.
 - [qr.py](mllib/qr.py): QR decomposition algorithm.
 - [pca.py](mllib/pca.py): PCA algorithm.
+- [svd.py](mllib/svd.py): SVD algorithm.
 - [naive_bayes.py](mllib/naive_bayes.py): Naive Bayes algorithm.
 - [utils.py](mllib/utils.py): Utility functions.
 
