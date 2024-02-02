@@ -53,7 +53,7 @@ class PCA:
         M *= signs
         return M
 
-    def fit(self, X: np.ndarray):
+    def fit(self, X: np.ndarray) -> None:
         """
         Fit the PCA model to the input data.
 
@@ -122,6 +122,7 @@ if __name__ == '__main__':
     # Msing sklearn PCA for comparison
     pca = PCA(n_components=2)
     my_result = pca.fit_transform(X)
-    print(my_result @ pca.components.T + pca.mean)
+    reconstructed = my_result @ pca.components.T + pca.mean
+    print(f'Mean absolute error on reconstruction: {np.mean(np.abs(X - reconstructed)):3.2f}')
 
 
