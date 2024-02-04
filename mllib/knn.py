@@ -1,6 +1,6 @@
 import numpy as np
 from base import BaseEstimator
-from utils import minkowski_distance, euclidean_distance, cosine_distance
+from utils import minkowski_distance, cosine_distance
 
 
 class KNN(BaseEstimator):
