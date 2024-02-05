@@ -84,6 +84,7 @@ class RandomForestRegressor(RandomForest):
             row_prediction.append(estimator.predict(X))
         return np.mean(row_prediction, axis=0)
 
+
 if __name__ == "__main__":
     from sklearn.datasets import make_classification, make_regression
     from sklearn.model_selection import train_test_split
