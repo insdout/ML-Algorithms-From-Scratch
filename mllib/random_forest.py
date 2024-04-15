@@ -38,13 +38,13 @@ class RandomForestClassifier(RandomForest):
             tree_max_features = "sqrt"
         else:
             tree_max_features = self.max_features
-            
+
         for _ in range(self.n_estimators):
             self.estimators.append(
                 DecisionTreeClassifier(
-                    criterion=self.criterion, 
-                    max_depth=None, 
-                    max_features=tree_max_features, 
+                    criterion=self.criterion,
+                    max_depth=None,
+                    max_features=tree_max_features,
                     min_samples_split=self.min_samples_split
                     )
                 )
@@ -56,7 +56,7 @@ class RandomForestClassifier(RandomForest):
         row_prediction = np.stack(row_prediction, axis=1)
         counts = np.apply_along_axis(lambda x: np.bincount(x).argmax(), axis=1, arr=row_prediction)
         return counts
-    
+
 
 class RandomForestRegressor(RandomForest):
     def __init__(self, n_estimators=100, criterion="mse", max_depth=None, max_features="auto", min_samples_split=5):
@@ -66,13 +66,13 @@ class RandomForestRegressor(RandomForest):
             tree_max_features = "div3"
         else:
             tree_max_features = self.max_features
-            
+
         for _ in range(self.n_estimators):
             self.estimators.append(
                 DecisionTreeRegressor(
-                    criterion=self.criterion, 
-                    max_depth=None, 
-                    max_features=tree_max_features, 
+                    criterion=self.criterion,
+                    max_depth=None,
+                    max_features=tree_max_features,
                     min_samples_split=self.min_samples_split
                     )
                 )
