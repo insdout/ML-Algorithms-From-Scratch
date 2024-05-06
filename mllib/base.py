@@ -1,6 +1,6 @@
 import numpy as np
 from collections import defaultdict
-from typing import Optional, Tuple, List, Any
+from typing import Optional, Tuple, List, Any, Generator
 
 class BaseEstimator:
     y_required: bool = True
@@ -66,7 +66,7 @@ class BaseOptimizer:
         self.history = defaultdict(list)
         self.history["parameters"].append(list(parameters))
 
-    def batch_generator(self, X: np.ndarray, y: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def batch_generator(self, X: np.ndarray, y: np.ndarray) -> Generator[np.ndarray, np.ndarray]:
         n_samples = X.shape[0]
         batch_size = self.batch_size
         indices = np.arange(n_samples)
