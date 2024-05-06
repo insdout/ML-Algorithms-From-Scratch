@@ -55,7 +55,7 @@ For detailed information about each algorithm, refer to the respective Jupyter N
 ---
 
 TODO: Algorithms to add.
-- Add SVM
+- Add Kernel SVM (using cvxopt)
 - Add Spectral Clustering
 
 
