@@ -66,7 +66,7 @@ class BaseOptimizer:
         self.history = defaultdict(list)
         self.history["parameters"].append(list(parameters))
 
-    def batch_generator(self, X: np.ndarray, y: np.ndarray) -> Generator[np.ndarray, np.ndarray]:
+    def batch_generator(self, X: np.ndarray, y: np.ndarray) -> Generator[Tuple[np.ndarray, np.ndarray], None, None]:
         n_samples = X.shape[0]
         batch_size = self.batch_size
         indices = np.arange(n_samples)
