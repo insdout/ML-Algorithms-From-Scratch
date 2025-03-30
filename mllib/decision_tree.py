@@ -283,4 +283,5 @@ if __name__ == "__main__":
     print(metrics.confusion_matrix(y_test, pred))
     print(f"predictions: {pred[:10]}")
     print(f"predictions proba: {pred_prob}")
-    print()
+    print("Done")
+
