@@ -104,4 +104,3 @@ if __name__ == '__main__':
     # Calculate accuracy for logistic regression
     accuracy_log_reg = accuracy_score(y_test, y_pred_log_reg)
     print("Accuracy for Logistic Regression:", accuracy_log_reg)
-
